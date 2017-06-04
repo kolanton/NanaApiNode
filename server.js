@@ -7,6 +7,7 @@ var dbConfig = require("./dbConfig.json");
 
 // call the packages we need
 var express = require('express'); // call express
+var cors = require('cors'); //cors
 var app = express(); // define our app using express
 var bodyParser = require('body-parser');
 const sql = require('mssql')
@@ -17,8 +18,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors());
 
-var port = process.env.PORT || 8080; // set our port
+var port = process.env.PORT || 8000; // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
