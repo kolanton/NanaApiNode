@@ -26,14 +26,27 @@ var router = express.Router(); // get an instance of the express Router
 
 router.get('/mainTopFour', function (req, res) {
     let query = "SELECT TOP 4 * FROM [TenTvAppFront_Main] order by DisplayOrder";
-    runSql(res, req,query);
+    runSql(res, req, query);
 });
 
 router.get('/mainFeed', function (req, res) {
     let query = "select *" +
         "from (select top 1000 Row_Number() over (order by DisplayOrder) as RowNumber," +
         "*    from [TenTvAppFront_Main]) as PagedTable where RowNumber between 5 and 1000 order by DisplayOrder";
-    runSql(res, req,query);
+    runSql(res, req, query);
+});
+
+router.get('/mainFeed/:ids', function (req, res) {
+    let ids = req.params.ids;
+    let query = "SELECT TOP 200 * FROM [BaseDB].[dbo].[TenTvAppFront_ArticlesPerServices] where ServiceID IN (" + ids + ") order by DestArticleId";
+    runSql(res, req, query);
+});
+
+
+router.get('/article/:id', function (req, res) {
+    let id = req.params.id;
+    let query = "SELECT TOP 200 *  FROM [BaseDB].[dbo].[TenTvAppFront_Article] where ArticleID=" + id + " order by ArticleID desc";
+    runSql(res, req, query);
 });
 
 // more routes for our API will happen here
