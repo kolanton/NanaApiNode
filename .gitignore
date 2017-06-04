@@ -54,6 +54,7 @@ npm-debug.log
 /dist/**
 .webpack.json
 npm-debug.log.*
+dbConfig.json
 
 # Doc #
 /doc/
