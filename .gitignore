@@ -53,7 +53,6 @@ npm-debug.log
 /src/*/dist/
 /dist/**
 .webpack.json
-dbConfig.json
 npm-debug.log.*
 
 # Doc #
