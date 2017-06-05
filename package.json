@@ -3,16 +3,20 @@
   "version": "0.0.1",
   "description": "Nana10 Restfull api",
   "main": "server.js",
-    "dependencies": {
-        "express": "^4.14.0",
-        "body-parser": "^1.15.2",
-         "mssql":"^3.3.0"
-    },
-    "scripts": {
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.3",
+    "express": "^4.14.0",
+    "mssql": "^3.3.0"
+  },
+  "scripts": {
     "start": "node server.js"
   },
   "author": {
     "name": "Anton Kol",
     "email": "antonk@nana10.tv"
+  },
+  "devDependencies": {
+    "cors": "^2.8.3"
   }
 }

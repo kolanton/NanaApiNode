@@ -27,28 +27,30 @@ var port = process.env.PORT || 8000; // set our port
 var router = express.Router(); // get an instance of the express Router
 
 router.get('/mainTopFour', function (req, res) {
+    console.log('mainTopFour');
     let query = "SELECT TOP 4 * FROM [TenTvAppFront_Main] order by DisplayOrder";
-    runSql(res, req, query);
+    runSqlPromise(res, req, query);
 });
 
 router.get('/mainFeed', function (req, res) {
+    console.log('mainFeed');
     let query = "select *" +
         "from (select top 1000 Row_Number() over (order by DisplayOrder) as RowNumber," +
         "*    from [TenTvAppFront_Main]) as PagedTable where RowNumber between 5 and 1000 order by DisplayOrder";
-    runSql(res, req, query);
+    runSqlPromise(res, req, query);
 });
 
 router.get('/mainFeed/:ids', function (req, res) {
     let ids = req.params.ids;
     let query = "SELECT TOP 200 * FROM [BaseDB].[dbo].[TenTvAppFront_ArticlesPerServices] where ServiceID IN (" + ids + ") order by DestArticleId";
-    runSql(res, req, query);
+    runSqlPromise(res, req, query);
 });
 
 
 router.get('/article/:id', function (req, res) {
     let id = req.params.id;
     let query = "SELECT TOP 200 *  FROM [BaseDB].[dbo].[TenTvAppFront_Article] where ArticleID=" + id + " order by ArticleID desc";
-    runSql(res, req, query);
+    runSqlPromise(res, req, query);
 });
 
 // more routes for our API will happen here
@@ -62,6 +64,23 @@ app.use('/api', router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
 
+function runSqlPromise(res, req, query) {
+    sql.connect(dbConfig).then(pool => {
+        // Query 
+
+        return pool.request()
+            .query(query)
+    }).then(result => {
+        res.send(result);
+    }).catch(err => {
+        // ... error checks 
+    })
+
+    sql.on('error', err => {
+        // ... error handler 
+    })
+}
+
 function runSql(res, req, query) {
     sql.connect(dbConfig, err => {
         // ... error checks 
@@ -71,7 +90,7 @@ function runSql(res, req, query) {
         new sql.Request().query(query, (err, result) => {
             // ... error checks 
 
-            res.json(result);
+            res.send(result);
         })
 
         // Stored Procedure 
