@@ -1,16 +1,13 @@
-//db config
-var dbConfig = require("./dbConfig.json");
-// server.js
-
 // BASE SETUP
 // =============================================================================
 
 // call the packages we need
-var express = require('express'); // call express
-var cors = require('cors'); //cors
-var app = express(); // define our app using express
-var bodyParser = require('body-parser');
-const sql = require('mssql')
+const express = require('express'); // call express
+const cors = require('cors'); //cors
+const app = express(); // define our app using express
+const bodyParser = require('body-parser');
+const apiRoutes = require('./apiRoutes');
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -26,36 +23,9 @@ var port = process.env.PORT || 8000; // set our port
 // =============================================================================
 var router = express.Router(); // get an instance of the express Router
 
-router.get('/mainTopFour', function (req, res) {
-    console.log('mainTopFour');
-    let query = "SELECT TOP 4 * FROM [TenTvAppFront_Main] order by DisplayOrder";
-    runSqlPromise(res, req, query);
-});
-
-router.get('/mainFeed', function (req, res) {
-    console.log('mainFeed');
-    let query = "select *" +
-        "from (select top 1000 Row_Number() over (order by DisplayOrder) as RowNumber," +
-        "*    from [TenTvAppFront_Main]) as PagedTable where RowNumber between 5 and 1000 order by DisplayOrder";
-    runSqlPromise(res, req, query);
-});
-
-router.get('/mainFeed/:ids', function (req, res) {
-    let ids = req.params.ids;
-    let query = "SELECT TOP 200 * FROM [BaseDB].[dbo].[TenTvAppFront_ArticlesPerServices] where ServiceID IN (" + ids + ") order by DestArticleId";
-    runSqlPromise(res, req, query);
-});
-
-
-router.get('/article/:id', function (req, res) {
-    let id = req.params.id;
-    let query = "SELECT TOP 200 *  FROM [BaseDB].[dbo].[TenTvAppFront_Article] where ArticleID=" + id + " order by ArticleID desc";
-    runSqlPromise(res, req, query);
-});
-
-// more routes for our API will happen here
-
 // REGISTER OUR ROUTES -------------------------------
+apiRoutes.init(router);
+
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
@@ -64,48 +34,3 @@ app.use('/api', router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
 
-function runSqlPromise(res, req, query) {
-    sql.connect(dbConfig).then(pool => {
-        // Query 
-
-        return pool.request()
-            .query(query)
-    }).then(result => {
-        res.send(result);
-    }).catch(err => {
-        // ... error checks 
-    })
-
-    sql.on('error', err => {
-        // ... error handler 
-    })
-}
-
-function runSql(res, req, query) {
-    sql.connect(dbConfig, err => {
-        // ... error checks 
-
-        // Query 
-
-        new sql.Request().query(query, (err, result) => {
-            // ... error checks 
-
-            res.send(result);
-        })
-
-        // Stored Procedure 
-
-        // new sql.Request()
-        //     .input('input_parameter', sql.Int, value)
-        //     .output('output_parameter', sql.VarChar(50))
-        //     .execute('procedure_name', (err, result) => {
-        //         // ... error checks 
-
-        //         console.dir(result)
-        //     })
-    })
-
-    sql.on('error', err => {
-        // ... error handler 
-    })
-}
