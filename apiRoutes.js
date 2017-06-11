@@ -1,7 +1,7 @@
 const sqlManager = require('./sqlManager');
 const mongoManager = require('./mongoManager');
-const mongoose = require('mongoose');
-const Talkback = require('./talkback');
+// const mongoose = require('mongoose');
+
 
 class apiRoutes {
     static init(router) {
@@ -53,20 +53,19 @@ class apiRoutes {
         // });
         /*monodb start*/
 
-        router.get('/article/talkback/:id', function (req, res) {
+        router.get('/article/talkbacks/:id', function (req, res) {
             //let id = req.params.id;
             let id = 428277;
             let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
             let params = [res, req, query];
             mongoManager.runSqlPromise(...params);
         });
-            
-
-
-               //let 
-
-                   // MyModel.save(); 
-  
+          router.get('/article/talkback/:id', function (req, res) {
+            // //let id = req.params.id;
+            // let id = 428277;
+            // let params = [res, req, query];
+            mongoManager.runSqlPromise(...params);            
+        });
         /*mongodb end */
     }
 }
