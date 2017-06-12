@@ -4,17 +4,15 @@ const sql = require('mssql');
 const apiParser = require('./apiParser');
 
 class sqlManager {
-    static runSqlPromise(res, req, query, isHeadlines = false) {
+    static runSqlPromise(props) {
         sql.connect(dbConfig).then(pool => {
             // Query 
 
             return pool.request()
-                .query(query)
+                .query(props.query)
         }).then(result => {
-            let results = isHeadlines ?
-                new apiParser(result).applyImagePath() :
-                result;
-            res.send(results);
+            let results = props.parserCallback(result);
+            props.res.send(results);
         }).catch(err => {
             // ... error checks 
             console.dir(err);

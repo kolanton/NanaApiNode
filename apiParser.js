@@ -1,30 +1,43 @@
-class ApiParser {
-    constructor(headlineList) {
-        this.headlineList = headlineList;
+class apiParser {
+    constructor() {
+        this.headlineList = [];
+        this.article = [];
         this.NANA_IMAGES_DOMAIN = 'http://f.nanafiles.co.il';
-
+        this.applyImagePathArticle = this.applyImagePathArticle.bind(this);
+        this.applyImagePathHeadline = this.applyImagePathHeadline.bind(this);
     }
 
-    applyImagePath() {
-        this.headlineList.map((item)=>{
+    applyImagePathHeadline(headlines) {
+        this.headlineList = headlines;
+        this.headlineList.map((item) => {
             item['ImagePath'] = this.setImagePath(item);
             item['HeadLineName'] = this.setHeadlineName(item);
-        })
+        },this)
 
         return this.headlineList;
 
+    }
+
+    applyImagePathArticle(articles) {
+        this.article = articles;
+        this.article.map((item) => {
+            item['ImagePathArticle'] = this.GetImagePathByType(item.ArticleMediaStockImageID, ImageTypes.Article_Default, 'jpg');
+            item['imagePathParagraph'] = this.GetImagePathByType(item.PicMediaStockImageID, ImageTypes.Main_450_450, 'jpg');
+        },this)
+
+        return this.article;
     }
 
     setImagePath(element) {
         return this.GetImagePathByType(element.MediaStockImageID, DisplaySignsToHeadlineTypes[element.DisplaySigns].imageType.mediaStockType, 'jpg');
     }
 
-    setHeadlineName(element){
+    setHeadlineName(element) {
         return DisplaySignsToHeadlineTypes[element.DisplaySigns].headlineName;
     }
 
     GetImagePathByType(mediaStockImageID, type, mediaStockImageExt) {
-       
+        if (mediaStockImageID === null || mediaStockImageID === "") return "";
         let currentExt = mediaStockImageExt || 'jpg';
         return this.GetImagePath(mediaStockImageID, type, currentExt);
     }
@@ -41,6 +54,8 @@ class ApiParser {
 
     }
 }
+
+module.exports = apiParser;
 
 const ImageTypes = {
     Thumbnail_109_59: {
@@ -97,18 +112,49 @@ const ImageTypes = {
 }
 
 const DisplaySignsToHeadlineTypes = {
-            10: {headlineName: 'Big', imageType: ImageTypes.Headline_Big_460_258},
-            1: {headlineName: 'Small', imageType: ImageTypes.Small_130_72},  // temporary replaced by standard item in views
-            2: {headlineName: 'Main', imageType: ImageTypes.Main_450_450},
-            8: {headlineName: 'Small', imageType: ImageTypes.Small_303_165},
-            9: {headlineName: 'Pair', imageType: ImageTypes.Headline_Big_460_258},
-            0: {headlineName: 'Small', imageType: ImageTypes.Small_303_165},
-            6: {headlineName: 'Alert', imageType: ImageTypes.Thumbnail_109_59},
-            3: {headlineName: 'Small', imageType: ImageTypes.Small_303_165},
-            4: {headlineName: 'Small', imageType: ImageTypes.Small_303_165},
-            5: {headlineName: 'Small', imageType: ImageTypes.Small_303_165},
-            7: {headlineName: 'Small', imageType: ImageTypes.Small_303_165}
+    10: {
+        headlineName: 'Big',
+        imageType: ImageTypes.Headline_Big_460_258
+    },
+    1: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_130_72
+    }, // temporary replaced by standard item in views
+    2: {
+        headlineName: 'Main',
+        imageType: ImageTypes.Main_450_450
+    },
+    8: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    },
+    9: {
+        headlineName: 'Pair',
+        imageType: ImageTypes.Headline_Big_460_258
+    },
+    0: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    },
+    6: {
+        headlineName: 'Alert',
+        imageType: ImageTypes.Thumbnail_109_59
+    },
+    3: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    },
+    4: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    },
+    5: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    },
+    7: {
+        headlineName: 'Small',
+        imageType: ImageTypes.Small_303_165
+    }
 
-        };
-
-module.exports = ApiParser;
+};
