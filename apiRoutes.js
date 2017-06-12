@@ -1,5 +1,6 @@
 const sqlManager = require('./sqlManager');
 const apiParser = require('./apiParser');
+const mongoManager = require('./mongoManager');
 
 class apiRoutes {
     constructor(router) {
@@ -38,8 +39,9 @@ class apiRoutes {
                 query: query,
                 parserCallback: parserCallback
             });
-            sqlManager.runSqlPromise(params);
-        });
+            sqlManager.runSqlPromise(params)
+            });
+
 
         router.get('/mainFeed/:ids', function (req, res) {
             let ids = req.params.ids;
@@ -57,7 +59,6 @@ class apiRoutes {
             sqlManager.runSqlPromise(params);
         });
 
-
         router.get('/article/:id', function (req, res) {
             let id = req.params.id;
             let query = "SELECT TOP 200 *  FROM [BaseDB].[dbo].[TenTvAppFront_Article] where ArticleID=" + id + " order by ArticleID desc";
@@ -74,9 +75,21 @@ class apiRoutes {
             sqlManager.runSqlPromise(params);
         });
 
+         router.get('/article/talkbacks/:id', function (req, res) {
+            //let id = req.params.id;
+            let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
+            let params = [res, req, query];
+            mongoManager.runSqlPromise(...params);
+        });
+          router.get('/article/talkback/:id', function (req, res) {
+            // //let id = req.params.id;
+            // let id = 428277;
+            // let params = [res, req, query];
+            mongoManager.runSqlPromise(...params);            
+        });
     }
 }
-
 
 class SqlManagerParams {
     constructor(props) {
@@ -86,7 +99,7 @@ class SqlManagerParams {
         this.parserCallback = props.parserCallback;
     }
 }
-
+       
 module.exports = {
     apiRoutes,
     SqlManagerParams
