@@ -44,27 +44,27 @@ class apiRoutes {
             sqlManager.runSqlPromise(...params);
         });
 
-        // router.get('/article/talkback/:id', function (req, res) {
-        //     //let id = req.params.id;
-        //     let id = 428277;
-        //     let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
-        //     let params = [res, req, query];
-        //     sqlManager.runSqlPromise(...params);
-        // });
+        router.get('/article/talkback/:id', function (req, res) {
+            //let id = req.params.id;
+            let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
+            let params = [res, req, query];
+            sqlManager.runSqlPromise(...params);
+        });
         /*monodb start*/
 
-        router.get('/article/talkbacks/:id', function (req, res) {
+        router.get('/article/talkbacks/sql/:id', function (req, res) {
             //let id = req.params.id;
             let id = 428277;
             let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
             let params = [res, req, query];
             mongoManager.runSqlPromise(...params);
         });
-          router.get('/article/talkback/:id', function (req, res) {
+        router.get('/article/talkback/mongo/:id', function (req, res) {
             // //let id = req.params.id;
             // let id = 428277;
-            // let params = [res, req, query];
-            mongoManager.runSqlPromise(...params);            
+            let params = [res, req];
+            mongoManager.getFromMongoDb(...params);            
         });
         /*mongodb end */
     }

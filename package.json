@@ -11,13 +11,16 @@
     "mssql": "^3.3.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha   --reporter nyan  \"./tests/**/test.js\"",
+     "run": "npm-run-all --parallel start test "
   },
   "author": {
     "name": "Anton Kol",
     "email": "antonk@nana10.tv"
   },
   "devDependencies": {
-    "cors": "^2.8.3"
+    "cors": "^2.8.3",
+    "mocha": "^3.4.2"
   }
 }

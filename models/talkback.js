@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 class Talkback {
     constructor() {
-        let db = mongoose.connect('mongodb://localhost');
+        let db = mongoose.connect('mongodb://localhost/talkback');
         let Schema = mongoose.Schema,
             ObjectId = Schema.ObjectId;
         let talkback = new Schema({
@@ -17,6 +17,6 @@ class Talkback {
             MessageBody: String
         });     
         this.talkback = mongoose.models.talkback || db.model('talkback', talkback);        
-    }
+        }
 }
 module.exports = Talkback;
