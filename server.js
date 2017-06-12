@@ -6,7 +6,7 @@ const express = require('express'); // call express
 const cors = require('cors'); //cors
 const app = express(); // define our app using express
 const bodyParser = require('body-parser');
-const apiRoutes = require('./apiRoutes');
+const apiRoutes = require('./apiRoutes').apiRoutes;
 
 
 // configure app to use bodyParser()
@@ -24,7 +24,7 @@ var port = process.env.PORT || 8000; // set our port
 var router = express.Router(); // get an instance of the express Router
 
 // REGISTER OUR ROUTES -------------------------------
-apiRoutes.init(router);
+let r = new apiRoutes(router);
 
 // all of our routes will be prefixed with /api
 app.use('/api', router);
