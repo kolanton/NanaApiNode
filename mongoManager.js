@@ -35,9 +35,8 @@ class mongoManager {
     static getFromMongoDb(res, req, isHeadlines = false) {
         let tb = new Talkback(); 
         let talkback = tb.talkback.find({},(err, post)=>{
-            console.log("post",post);
-        });
-      
+             res.send(post);
+        });       
     }
 }
 

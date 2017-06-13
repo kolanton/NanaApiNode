@@ -16,7 +16,12 @@ class Talkback {
             Status: Number,
             MessageBody: String
         });     
-        this.talkback = mongoose.models.talkback || db.model('talkback', talkback);        
+            talkback.pre('find',(next)=>{
+            console.log('----------find request--------');
+            next();
+            });   
+        this.talkback = mongoose.models.talkback || db.model('talkback', talkback);  
+ 
         }
 }
 module.exports = Talkback;
