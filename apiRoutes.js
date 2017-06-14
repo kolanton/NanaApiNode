@@ -76,8 +76,8 @@ class apiRoutes {
 
         router.get('/article/talkback/:id', function (req, res) {
             //let id = req.params.id;
-            let id = 428277;
-            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
+           // let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback]";
             let parser = new apiParser();
             let parserCallback = parser.talkbackParser;
             let params = new SqlManagerParams({
@@ -90,8 +90,10 @@ class apiRoutes {
         });
 
         /*monodb start*/
-        router.get('/article/talkbacks/sql/:id', function (req, res) {
+        router.get('/article/talkback/sql/:id', function (req, res) {
             let parser = new apiParser();
+            let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] order by MessageID ";
             let parserCallback = parser.applyImagePathArticle;
             let params = new SqlManagerParams({
                 res: res,

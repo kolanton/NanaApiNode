@@ -7,29 +7,29 @@ const Talkback = require('./models/talkback')
 
 
 class mongoManager {
-
-    static runSqlPromise(res, req, query, isHeadlines = false) {
+    static runSqlPromise(props) {
         sql.connect(dbConfig).then(pool => {
+            // Query 
+
             return pool.request()
-                .query(query)
+                .query(props.query)
         }).then(result => {
-            let results = isHeadlines ?
-                new apiParser(result).applyImagePath() :
-                result;
+            let results = props.parserCallback(result);
             let tb = new Talkback(); 
             results.forEach(function(element) {
                 let talkback = new tb.talkback(element); 
                 talkback.save();       
             }, this);                
-            res.send(results);
+            props.res.send(results);
         }).catch(err => {
             // ... error checks 
             console.dir(err);
-        });
+        })
+
         sql.on('error', err => {
             // ... error handler 
             console.dir(err);
-        });
+        })
     }
 
     static getFromMongoDb(res, req, isHeadlines = false) {
