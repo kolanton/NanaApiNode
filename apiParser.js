@@ -12,7 +12,7 @@ class apiParser {
         this.headlineList.map((item) => {
             item['ImagePath'] = this.setImagePath(item);
             item['HeadLineName'] = this.setHeadlineName(item);
-        },this)
+        }, this)
 
         return this.headlineList;
 
@@ -21,9 +21,17 @@ class apiParser {
     applyImagePathArticle(articles) {
         this.article = articles;
         this.article.map((item) => {
-            item['ImagePathArticle'] = this.GetImagePathByType(item.ArticleMediaStockImageID, ImageTypes.Article_Default, 'jpg');
-            item['imagePathParagraph'] = this.GetImagePathByType(item.PicMediaStockImageID, ImageTypes.Main_450_450, 'jpg');
-        },this)
+            item['ImagePathArticle'] = this.GetImagePathByType(item.ArticleMediaStockImageID, ImageTypes.Article_Default.mediaStockType, 'jpg');
+            item['ImagePathParagraph'] = this.GetImagePathByType(item.PicMediaStockImageID, ImageTypes.Main_450_450.mediaStockType, 'jpg');
+            item.StripImagePathShow = true;
+            if (item.ServiceID === 160) {
+                item['StripImagePath'] = item.ThumbPicPath;
+            } else if (item.IconURL2 != null && item.IconURL2 !== '') {
+                item['StripImagePath'] = this.NANA_IMAGES_DOMAIN + item.IconURL2;
+            } else {
+                item.StripImagePathShow = false;
+            }
+        }, this)
 
         return this.article;
     }
