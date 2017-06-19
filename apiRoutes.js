@@ -62,10 +62,9 @@ class apiRoutes {
         router.get('/article/:id', function (req, res) {
             let id = req.params.id;
             let query = "SELECT TOP 200 *  FROM [BaseDB].[dbo].[TenTvAppFront_Article] where ArticleID=" + id + " order by ArticleID desc";
-
+            sqlManager.runSqlPromise(...params); 
             let parser = new apiParser();
             let parserCallback = parser.applyImagePathArticle;
-
             let params = new SqlManagerParams({
                 res: res,
                 req: req,
@@ -75,19 +74,51 @@ class apiRoutes {
             sqlManager.runSqlPromise(params);
         });
 
-         router.get('/article/talkbacks/:id', function (req, res) {
+        router.get('/article/talkback/:id', function (req, res) {
             //let id = req.params.id;
-            let id = 428277;
-            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] where ArticleID=" + id + " order by ArticleID desc";
-            let params = [res, req, query];
-            mongoManager.runSqlPromise(...params);
+           // let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback]";
+            let parser = new apiParser();
+            let parserCallback = parser.talkbackParser;
+            let params = new SqlManagerParams({
+                res: res,
+                req: req,
+                query: query,
+                parserCallback: parserCallback
+            });
+            sqlManager.runSqlPromise(params);
         });
-          router.get('/article/talkback/:id', function (req, res) {
+
+        /*monodb start*/
+        router.get('/article/talkback/sql/:id', function (req, res) {
+            let parser = new apiParser();
+            let id = 428277;
+            let query = "SELECT TOP 1000 * FROM [BaseDB].[dbo].[TenTvAppFront_Talkback] order by MessageID ";
+            let parserCallback = parser.applyImagePathArticle;
+            let params = new SqlManagerParams({
+                res: res,
+                req: req,
+                query: query,
+                parserCallback: parserCallback
+            });
+            mongoManager.runSqlPromise(params);
+        });
+
+         router.get('/article/talkback/mongo/:id', function (req, res) {
             // //let id = req.params.id;
             // let id = 428277;
-            // let params = [res, req, query];
-            mongoManager.runSqlPromise(...params);            
+            console.log('/article/talkback/mongo/:id');
+            let params = [res, req];
+            mongoManager.getFromMongoDb(...params);            
         });
+
+        router.post('/article/talkback/mongo', function (req, res){
+            //let tb = req.params.talkback;
+            console.log('/article/talkback/mongo/:talkback');
+            let params = [res, req];
+            mongoManager.putToMongoDb(...params)
+        });
+        /*monodb end*/
     }
 }
 

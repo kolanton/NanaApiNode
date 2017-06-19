@@ -7,21 +7,18 @@ const Talkback = require('./models/talkback')
 
 
 class mongoManager {
-
-    static runSqlPromise(res, req, query, isHeadlines = false) {
+    static runSqlPromise(props) {
         sql.connect(dbConfig).then(pool => {
             return pool.request()
-                .query(query)
+                .query(props.query)
         }).then(result => {
-            let results = isHeadlines ?
-                new apiParser(result).applyImagePath() :
-                result;
+            let results = props.parserCallback(result);
             let tb = new Talkback(); 
             results.forEach(function(element) {
                 let talkback = new tb.talkback(element); 
                 talkback.save();       
             }, this);                
-            res.send(results);
+            props.res.send(results);
         }).catch(err => {
             // ... error checks 
             console.dir(err);
@@ -31,6 +28,33 @@ class mongoManager {
             // ... error handler 
             console.dir(err);
         })
+    }
+
+    static getFromMongoDb(res, req, isHeadlines = false) {
+        let tb = new Talkback(); 
+        let talkback = tb.talkback.find({},(err, post)=>{
+             res.send(post);
+        });
+    }       
+    static putToMongoDb(res, req){
+         console.log("putToMongoDb");
+            // let results = props.parserCallback(result);
+            let tb = new Talkback(); 
+            console.log("request.body",req.body);
+            res.send('POST MESSAGE');
+            //let talkback = new tb.talkback(req.body); 
+            // try {
+            //     console.log("start saving data");
+            //     talkback.save();
+            //     res.send({
+            //     status:'ok',
+            //     item: talkback.ObjectId
+            //    }); 
+            // } catch (error) {
+            //     props.res.send({
+            //     status:error,
+            //    }); 
+            // }
     }
 }
 

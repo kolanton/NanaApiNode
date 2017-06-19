@@ -36,6 +36,10 @@ class apiParser {
         return this.article;
     }
 
+    talkbackParser(talkbacks){
+        return talkbacks;
+    }
+
     setImagePath(element) {
         return this.GetImagePathByType(element.MediaStockImageID, DisplaySignsToHeadlineTypes[element.DisplaySigns].imageType.mediaStockType, 'jpg');
     }
