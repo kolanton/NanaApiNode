@@ -107,8 +107,16 @@ class apiRoutes {
          router.get('/article/talkback/mongo/:id', function (req, res) {
             // //let id = req.params.id;
             // let id = 428277;
+            console.log('/article/talkback/mongo/:id');
             let params = [res, req];
             mongoManager.getFromMongoDb(...params);            
+        });
+
+        router.post('/article/talkback/mongo', function (req, res){
+            //let tb = req.params.talkback;
+            console.log('/article/talkback/mongo/:talkback');
+            let params = [res, req];
+            mongoManager.putToMongoDb(...params)
         });
         /*monodb end*/
     }
