@@ -7,7 +7,8 @@ const cors = require('cors'); //cors
 const app = express(); // define our app using express
 const bodyParser = require('body-parser');
 const apiRoutes = require('./apiRoutes').apiRoutes;
-
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -30,8 +31,20 @@ let r = new apiRoutes(router);
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
+io.on('connection', function(socket){
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+  });
+});
+
+
+    
 // START THE SERVER
 // =============================================================================
-app.listen(port);
+// app.listen(port);
+http.listen(8000, function(){
+  console.log('listening on *:8000');
+});
+
 console.log('Magic happens on port ' + port);
 
